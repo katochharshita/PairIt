@@ -14,7 +14,7 @@ document.getElementById('excelFile').addEventListener('change', handleFileUpload
 document.getElementById('columnNumber').addEventListener('input', handleColumnChange);
 document.getElementById('generatePairs').addEventListener('click', generatePairs);
 document.getElementById('regeneratePairs').addEventListener('click', generatePairs);
-document.getElementById('downloadPDF').addEventListener('click', downloadPDF);
+document.getElementById('downloadImage').addEventListener('click', downloadImage);
 
 function handleFileUpload(event) {
     const file = event.target.files[0];
@@ -189,120 +189,119 @@ function showError(message) {
     errorDiv.classList.remove('hidden');
 }
 
-function downloadPDF() {
+function downloadImage() {
     if (currentPairs.length === 0) {
         showError('No pairs to download. Please generate pairs first.');
         return;
     }
     
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+    // Create a temporary container for the image
+    const tempContainer = document.createElement('div');
+    tempContainer.style.position = 'absolute';
+    tempContainer.style.left = '-9999px';
+    tempContainer.style.width = '800px';
+    tempContainer.style.padding = '40px';
+    tempContainer.style.background = 'white';
+    tempContainer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif';
     
-    // Set up colors
-    const primaryColor = [102, 126, 234];
-    const secondaryColor = [118, 75, 162];
-    const accentColor = [255, 193, 7];
+    // Header
+    const header = document.createElement('div');
+    header.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+    header.style.padding = '30px';
+    header.style.borderRadius = '10px 10px 0 0';
+    header.style.marginBottom = '30px';
+    header.style.textAlign = 'center';
     
-    // Header with gradient effect
-    doc.setFillColor(...primaryColor);
-    doc.rect(0, 0, 210, 40, 'F');
+    const title = document.createElement('h1');
+    title.textContent = 'Find your ESN Date';
+    title.style.color = 'white';
+    title.style.margin = '0 0 10px 0';
+    title.style.fontSize = '32px';
+    title.style.fontWeight = 'bold';
     
-    // Decorative accent line
-    doc.setFillColor(...accentColor);
-    doc.rect(0, 38, 210, 2, 'F');
+    const subtitle = document.createElement('p');
+    subtitle.textContent = 'Meet your Coffee Date for the month and have fun!!';
+    subtitle.style.color = 'rgba(255, 255, 255, 0.9)';
+    subtitle.style.margin = '0';
+    subtitle.style.fontSize = '14px';
     
-    // Title
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(28);
-    doc.setFont(undefined, 'bold');
-    doc.text('Find your ESN Date', 105, 22, { align: 'center' });
+    header.appendChild(title);
+    header.appendChild(subtitle);
+    tempContainer.appendChild(header);
     
-    // Subtitle
-    doc.setFontSize(11);
-    doc.setFont(undefined, 'normal');
-    doc.text('Meet your Coffee Date for the month and have fun!!', 105, 32, { align: 'center' });
-    
-    // Reset text color
-    doc.setTextColor(0, 0, 0);
-    
-    let yPosition = 55;
-    const pageHeight = 280;
-    const margin = 15;
-    const cardHeight = 45;
-    const cardSpacing = 15;
+    // Pairs container
+    const pairsContainer = document.createElement('div');
+    pairsContainer.style.display = 'grid';
+    pairsContainer.style.gridTemplateColumns = 'repeat(2, 1fr)';
+    pairsContainer.style.gap = '15px';
     
     currentPairs.forEach((pair, index) => {
-        // Check if we need a new page
-        if (yPosition + cardHeight > pageHeight - margin) {
-            doc.addPage();
-            yPosition = 20;
-        }
+        const pairCard = document.createElement('div');
+        pairCard.style.background = 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)';
+        pairCard.style.padding = '20px';
+        pairCard.style.borderRadius = '10px';
+        pairCard.style.borderLeft = '4px solid #667eea';
+        pairCard.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
         
-        // Card shadow effect (light gray rectangle behind)
-        doc.setFillColor(240, 240, 240);
-        doc.roundedRect(margin + 2, yPosition - 10, 180, cardHeight + 2, 5, 5, 'F');
+        const pairNumber = document.createElement('div');
+        pairNumber.textContent = `#${index + 1}`;
+        pairNumber.style.fontSize = '14px';
+        pairNumber.style.color = '#666';
+        pairNumber.style.fontWeight = 'bold';
+        pairNumber.style.marginBottom = '10px';
         
-        // Main card background with gradient-like effect
-        doc.setFillColor(255, 255, 255);
-        doc.setDrawColor(...primaryColor);
-        doc.setLineWidth(0.5);
-        doc.roundedRect(margin, yPosition - 12, 180, cardHeight, 5, 5, 'FD');
+        const names = document.createElement('div');
+        names.textContent = pair.people.join('  &  ');
+        names.style.fontSize = '16px';
+        names.style.color = '#333';
+        names.style.fontWeight = 'bold';
+        names.style.marginBottom = '12px';
         
-        // Left accent bar
-        doc.setFillColor(...primaryColor);
-        doc.roundedRect(margin, yPosition - 12, 4, cardHeight, 0, 0, 'F');
+        const separator = document.createElement('div');
+        separator.style.height = '1px';
+        separator.style.background = '#ddd';
+        separator.style.marginBottom = '12px';
         
-        // Pair number - just show # and number
-        doc.setTextColor(100, 100, 100);
-        doc.setFontSize(12);
-        doc.setFont(undefined, 'bold');
-        doc.text(`#${index + 1}`, margin + 10, yPosition - 2);
-        
-        // Names with better styling
-        doc.setFontSize(16);
-        doc.setTextColor(0, 0, 0);
-        doc.setFont(undefined, 'bold');
-        const namesText = pair.people.join('  &  ');
-        doc.text(namesText, margin + 10, yPosition + 8);
-        
-        // Coffee emoji separator line
-        doc.setDrawColor(200, 200, 200);
-        doc.setLineWidth(0.3);
-        doc.line(margin + 10, yPosition + 12, margin + 170, yPosition + 12);
-        
-        // Twist with cleaned text
-        doc.setFontSize(10);
-        doc.setTextColor(...primaryColor);
-        doc.setFont(undefined, 'italic');
+        const twist = document.createElement('div');
         const cleanTwist = cleanTwistText(pair.twist);
-        // Split long text into multiple lines if needed
-        const maxWidth = 160;
-        const twistLines = doc.splitTextToSize(cleanTwist, maxWidth);
-        doc.text(twistLines, margin + 10, yPosition + 20);
+        twist.textContent = cleanTwist;
+        twist.style.fontSize = '11px';
+        twist.style.color = '#667eea';
+        twist.style.fontStyle = 'italic';
         
-        yPosition += cardHeight + cardSpacing;
+        pairCard.appendChild(pairNumber);
+        pairCard.appendChild(names);
+        pairCard.appendChild(separator);
+        pairCard.appendChild(twist);
+        pairsContainer.appendChild(pairCard);
     });
     
-    // Add footer with better styling
-    const totalPages = doc.internal.pages.length - 1;
-    for (let i = 1; i <= totalPages; i++) {
-        doc.setPage(i);
-        // Footer line
-        doc.setDrawColor(200, 200, 200);
-        doc.setLineWidth(0.5);
-        doc.line(20, 275, 190, 275);
+    tempContainer.appendChild(pairsContainer);
+    document.body.appendChild(tempContainer);
+    
+    // Capture as image
+    html2canvas(tempContainer, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+        logging: false,
+        useCORS: true
+    }).then(canvas => {
+        // Convert to image and download
+        canvas.toBlob(function(blob) {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+            link.download = `ESN_Date_Pairs_${timestamp}.png`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }, 'image/png');
         
-        doc.setFontSize(9);
-        doc.setTextColor(150, 150, 150);
-        doc.setFont(undefined, 'normal');
-        doc.text(`Page ${i} of ${totalPages}`, 105, 282, { align: 'center' });
-    }
-    
-    // Generate filename with timestamp
-    const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-    const filename = `ESN_Date_Pairs_${timestamp}.pdf`;
-    
-    // Save the PDF
-    doc.save(filename);
+        // Clean up
+        document.body.removeChild(tempContainer);
+    }).catch(error => {
+        showError('Error generating image: ' + error.message);
+        document.body.removeChild(tempContainer);
+    });
 }
 
