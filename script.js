@@ -2,12 +2,53 @@ let currentData = [];
 let currentColumn = 1;
 let currentPairs = [];
 
-// 4 predefined twist options
+// List of conversation prompts/questions
 const TWIST_OPTIONS = [
-    "Share your favorite childhood memory",
-    "Discuss a book or movie that changed your perspective",
-    "Talk about your dream travel destination",
-    "Share something you're passionate about"
+    "Send your buddy a song and explain why it fits your mood lately.",
+    "Each share one assumption people often make about you — and whether it's true.",
+    "Describe a place that feels like \"home\" to you and why.",
+    "Share one thing you're trying to unlearn.",
+    "Finish this sentence together: \"Lately, I've been thinking a lot about…\"",
+    "Share a photo from your camera roll that represents your week — explain why.",
+    "Each describe a moment recently when you felt unexpectedly grateful.",
+    "Recommend a habit you tried and kept (or tried and dropped) — what happened?",
+    "Finish this sentence: \"Right now, I'm spending a lot of energy on…\"",
+    "Share one thing you're better at than you were a year ago.",
+    "Pick a word that describes how this month feels for you — explain it.",
+    "Each share a piece of advice you'd give your past self from 2–3 years ago.",
+    "Send your buddy a link (article, video, post) that stuck with you recently and say why.",
+    "Describe a time you surprised yourself — good or bad.",
+    "Share one boundary you've learned to set (or are learning to set).",
+    "Finish this sentence honestly: \"Something I don't say out loud often is…\"",
+    "Each name one thing that reliably improves your mood — even a little.",
+    "Describe a place, activity, or routine where you feel most at ease.",
+    "Share one question you're currently trying to answer in your life.",
+    "Each share something you're intentionally saying \"no\" to lately.",
+    "Describe what you wish people understood better about your work or daily life.",
+    "Each share one thing you're hopeful about, even if it feels uncertain.",
+    "Finish this sentence: \"I feel most supported when people…\"",
+    "Share one small change that would make your next month noticeably better.",
+    "Show each other something on your phone that makes you smile (photo, note, playlist, meme).",
+    "Share one small win from the past week (nothing has to be impressive).",
+    "Teach your buddy something tiny (a shortcut, tip, phrase, or fun fact).",
+    "Describe your ideal lazy day in three steps.",
+    "Exchange one recommendation (podcast, YouTube channel, app, food spot, book, or habit).",
+    "Set a 60-second timer and rant about something harmless you love (coffee, dogs, stationery, niche hobby).",
+    "Ask each other one question you've always wanted to ask new people but rarely do.",
+    "Share one goal you're working toward right now — big or small.",
+    "Agree on one thing you'll both try before your next catch-up (something you've been planning to).",
+    "Swap a productivity hack or life shortcut you actually use.",
+    "Each name one thing you're currently obsessed with (food, show, tool, song, hobby).",
+    "Describe your perfect weekend morning in under 30 seconds.",
+    "Send a GIF or emoji that matches your current mood — explain if you want.",
+    "Name that one app or tool you'd be most annoyed to lose.",
+    "Play \"This or That\" for at least 3 rounds",
+    "Each share one thing that reliably makes your day better.",
+    "Show a note, quote, list, or reminder you keep coming back to.",
+    "Describe a food you could eat every week without getting bored.",
+    "Each say one thing you're looking forward to this week.",
+    "Teach each other a word, phrase, or saying you like (from any language or context).",
+    "Share a playlist name or song title that fits your vibe lately."
 ];
 
 document.getElementById('excelFile').addEventListener('change', handleFileUpload);
