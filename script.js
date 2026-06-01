@@ -4,51 +4,24 @@ let currentPairs = [];
 
 // List of conversation prompts/questions
 const TWIST_OPTIONS = [
-    "Send your buddy a song and explain why it fits your mood lately.",
-    "Each share one assumption people often make about you — and whether it's true.",
-    "Describe a place that feels like \"home\" to you and why.",
-    "Share one thing you're trying to unlearn.",
-    "Finish this sentence together: \"Lately, I've been thinking a lot about…\"",
-    "Share a photo from your camera roll that represents your week — explain why.",
-    "Each describe a moment recently when you felt unexpectedly grateful.",
-    "Recommend a habit you tried and kept (or tried and dropped) — what happened?",
-    "Finish this sentence: \"Right now, I'm spending a lot of energy on…\"",
-    "Share one thing you're better at than you were a year ago.",
-    "Pick a word that describes how this month feels for you — explain it.",
-    "Each share a piece of advice you'd give your past self from 2–3 years ago.",
-    "Send your buddy a link (article, video, post) that stuck with you recently and say why.",
-    "Describe a time you surprised yourself — good or bad.",
-    "Share one boundary you've learned to set (or are learning to set).",
-    "Finish this sentence honestly: \"Something I don't say out loud often is…\"",
-    "Each name one thing that reliably improves your mood — even a little.",
-    "Describe a place, activity, or routine where you feel most at ease.",
-    "Share one question you're currently trying to answer in your life.",
-    "Each share something you're intentionally saying \"no\" to lately.",
-    "Describe what you wish people understood better about your work or daily life.",
-    "Each share one thing you're hopeful about, even if it feels uncertain.",
-    "Finish this sentence: \"I feel most supported when people…\"",
-    "Share one small change that would make your next month noticeably better.",
-    "Show each other something on your phone that makes you smile (photo, note, playlist, meme).",
-    "Share one small win from the past week (nothing has to be impressive).",
-    "Teach your buddy something tiny (a shortcut, tip, phrase, or fun fact).",
-    "Describe your ideal lazy day in three steps.",
-    "Exchange one recommendation (podcast, YouTube channel, app, food spot, book, or habit).",
-    "Set a 60-second timer and rant about something harmless you love (coffee, dogs, stationery, niche hobby).",
-    "Ask each other one question you've always wanted to ask new people but rarely do.",
-    "Share one goal you're working toward right now — big or small.",
-    "Agree on one thing you'll both try before your next catch-up (something you've been planning to).",
-    "Swap a productivity hack or life shortcut you actually use.",
-    "Each name one thing you're currently obsessed with (food, show, tool, song, hobby).",
-    "Describe your perfect weekend morning in under 30 seconds.",
-    "Send a GIF or emoji that matches your current mood — explain if you want.",
-    "Name that one app or tool you'd be most annoyed to lose.",
-    "Play \"This or That\" for at least 3 rounds",
-    "Each share one thing that reliably makes your day better.",
-    "Show a note, quote, list, or reminder you keep coming back to.",
-    "Describe a food you could eat every week without getting bored.",
-    "Each say one thing you're looking forward to this week.",
-    "Teach each other a word, phrase, or saying you like (from any language or context).",
-    "Share a playlist name or song title that fits your vibe lately."
+    "Colour Doppelgängers: Find 3 things you have in common, each matching a colour: red = something you both love, blue = something that calms you, green = something you both want to try. Share the traits with your selfie in the group.",
+    "The \"We Should Actually Do This\" Dare: Talk until you find one activity, place, or idea that makes you both say \"Wait, we should actually do this,\" and Share the idea with your selfies in the group.",
+    "Create Your Pair Flag: Choose 2 colours, 1 symbol, and 1 slogan that represent your pair. Example: blue + Orange, Sunset at the Sea, \"calm chaos.\" Share your flag idea with your selfie in the group.",
+    "ESN Event From Your Pockets: Pick one random object you have with you right now and use it as inspiration for a funny ESN event idea. Example: headphones -> silent disco night. Share your ideas with the selfie on the group.",
+    "The Tiny Tradition Dare: Invent a tiny tradition your pair would start if you had to meet every month. Example: trying a new drink, rating cafes, or taking the same selfie pose. Share your tradition with a selfie in the group.",
+    "The Common Chaos Scale: Rate yourselves from 1 to 10 on chaos, chill, social energy, and planning skills, then share where you match the most with a selfie on the group.",
+    "The Rainbow Menu: Create a fake menu for your pair with one food you both like, one drink you both like, and one activity you both enjoy. Share the menu with a selfie on the group.",
+    "The 10-Minute Event Planner: Invent an event in 10 minutes that includes one colour, one snack, one activity, and one weird rule. Share the idea with the selfie in the group.",
+    "The Photo Mission: Send a photo of something that represents your pair's vibe, an object, place, drink, meme, screenshot (ideally with a selfie) on the group.",
+    "The Common Playlist Cover: Pick one song each for self and your pair, then give your 4-song playlist a name and a colour. Example: \"Purple Panic\" or \"Golden Hour Energy.\" Make sure to share the playlist with your selfie on the group.",
+    "The Buddy Brand: Imagine your pair is a brand and decide your colour, slogan, mascot, and main personality trait. Example: green, \"good vibes only,\" turtle mascot, grounded energy. Do advertise your brand with a selfie on the group.",
+    "The Event No One Asked For: Invent a ridiculous ESN event that sounds silly but you would secretly attend. Example: PowerPoint Night About Things We Care Too Much About. Share the idea on the group with your selfie.",
+    "The Comfort Combo: Find your shared comfort combo: comfort food, comfort place, and comfort activity. Share your comfort find with a selfie on the group.",
+    "The Newcomer Magic Trick: Discuss what helps you feel comfortable in a new setting, then invent one small \"magic trick\" that would help newcomers feel welcome at an ESN event. Share the trick with a selfie on the group.",
+    "The \"Same But Different\" Dare: Find 3 things you both like, but for completely different reasons. Example: both like walking - one for calm, one for exploring. Share what makes you same yet different with a selfie on the group.",
+    "The Buddy Bingo: Create a 3-box bingo card of things you have in common and send it to the group so others can see if they match your bingo too.",
+    "The Common Superpower: Find one \"superpower\" you both have or both appreciate in others. Example: making people laugh, staying calm, organizing things, noticing details, or finding good food. Share your discovered super powers with a selfie on the group.",
+    "The Unofficial ESN Award: Create an unofficial award your pair would win together. Example: \"Most Likely to Turn Coffee Into a 3-Hour Talk\" or \"Best Chill Vibes Committee.\" Do share the award you are winning with a selfie on the group."
 ];
 
 document.getElementById('excelFile').addEventListener('change', handleFileUpload);
@@ -126,15 +99,16 @@ function generatePairs() {
         return;
     }
     
-    // Shuffle the names array
-    const shuffled = [...names].sort(() => Math.random() - 0.5);
+    // Shuffle names and prompts using Fisher-Yates for better randomness each run
+    const shuffled = shuffleArray(names);
+    const shuffledTwists = shuffleArray(TWIST_OPTIONS);
     
     // Create pairs with random twists
     const pairs = [];
     for (let i = 0; i < shuffled.length; i += 2) {
         if (i + 1 < shuffled.length) {
-            // Randomly assign a twist to this pair
-            const randomTwist = TWIST_OPTIONS[Math.floor(Math.random() * TWIST_OPTIONS.length)];
+            // Assign a randomized twist from the shuffled prompt list
+            const randomTwist = shuffledTwists[(i / 2) % shuffledTwists.length];
             pairs.push({
                 people: [shuffled[i], shuffled[i + 1]],
                 twist: randomTwist
@@ -145,7 +119,7 @@ function generatePairs() {
             if (pairs.length > 0) {
                 pairs[pairs.length - 1].people.push(shuffled[i]);
             } else {
-                const randomTwist = TWIST_OPTIONS[Math.floor(Math.random() * TWIST_OPTIONS.length)];
+                const randomTwist = shuffledTwists[(i / 2) % shuffledTwists.length];
                 pairs.push({
                     people: [shuffled[i]],
                     twist: randomTwist
@@ -162,6 +136,15 @@ function generatePairs() {
     
     // Hide error if any
     document.getElementById('errorMessage').classList.add('hidden');
+}
+
+function shuffleArray(input) {
+    const arr = [...input];
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
 }
 
 function cleanTwistText(twist) {
@@ -345,4 +328,3 @@ function downloadImage() {
         document.body.removeChild(tempContainer);
     });
 }
-
